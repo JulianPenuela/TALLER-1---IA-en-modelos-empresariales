@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard IA · Inteligencia de Negocios</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%234f46e5'/><path d='M22 68l18-22 14 12 24-32' stroke='white' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<aside class="side">
+  <div class="brand"><span class="logo">◢</span><div><b>Nexo Analytics</b><small>Dashboard con IA</small></div></div>
+  <nav id="nav">
+    <button data-view="resumen" class="on">▦ Resumen ejecutivo</button>
+    <button data-view="tendencias">↗ Tendencias y pronóstico</button>
+    <button data-view="clientes">◔ Clientes y regiones</button>
+    <button data-view="productos">▤ Productos</button>
+    <button data-view="datos">✎ Datos y registro</button>
+  </nav>
+  <div class="side-foot"><span class="dot"></span> Datos en vivo<br><small>Registre ventas desde la consola con <code>npm run cli</code></small></div>
+</aside>
+<main>
+  <header class="top">
+    <div><h1 id="title">Resumen ejecutivo</h1><p id="sub" class="mut"></p></div>
+    <div class="filters">
+      <select id="fYear" title="Año"></select><select id="fRegion" title="Región"></select><select id="fCat" title="Categoría"></select>
+      <button id="theme" class="ghost" title="Modo claro/oscuro">◐</button>
+    </div>
+  </header>
+
+  <section id="v-resumen" class="view on">
+    <div class="kpis" id="kpis"></div>
+    <div class="grid g3">
+      <div class="card span2"><div class="ch"><h3>Tendencia de ventas y pronóstico IA</h3><span class="tag">Regresión + estacionalidad</span></div><div class="cv h300"><canvas id="cTrend"></canvas></div></div>
+      <div class="card"><div class="ch"><h3>Insights de IA</h3><span class="tag ai">✦ Automático</span></div><div id="insights" class="insights"></div></div>
+      <div class="card"><div class="ch"><h3>Ventas por región</h3></div><div class="cv h240"><canvas id="cRegion"></canvas></div></div>
+      <div class="card"><div class="ch"><h3>Utilidad por categoría</h3></div><div class="cv h240"><canvas id="cCat"></canvas></div></div>
+      <div class="card"><div class="ch"><h3>Factores de influencia</h3><span class="tag">Impacto en ingreso/venta</span></div><div id="infl" class="infl"></div></div>
+    </div>
+  </section>
+
+  <section id="v-tendencias" class="view">
+    <div class="grid g3">
+      <div class="card span2"><div class="ch"><h3>Ingresos mensuales y margen</h3></div><div class="cv h320"><canvas id="cCombo"></canvas></div></div>
+      <div class="card"><div class="ch"><h3>Anomalías detectadas</h3><span class="tag ai">✦ z-score</span></div><div id="anom"></div></div>
+      <div class="card span3"><div class="ch"><h3>Pronóstico próximos 6 meses</h3><span class="tag" id="ajuste"></span></div><div class="tbl-wrap"><table id="tFc"></table></div></div>
+    </div>
+  </section>
+
+  <section id="v-clientes" class="view">
+    <div class="grid g2">
+      <div class="card"><div class="ch"><h3>Ingresos por segmento de edad</h3></div><div class="cv h300"><canvas id="cSeg"></canvas></div></div>
+      <div class="card"><div class="ch"><h3>Ticket promedio por segmento</h3></div><div class="cv h300"><canvas id="cTicket"></canvas></div></div>
+      <div class="card span2"><div class="ch"><h3>Desempeño por región</h3></div><div class="tbl-wrap"><table id="tReg"></table></div></div>
+    </div>
+  </section>
+
+  <section id="v-productos" class="view">
+    <div class="grid g2">
+      <div class="card"><div class="ch"><h3>Ingresos por producto</h3></div><div class="cv h320"><canvas id="cProd"></canvas></div></div>
+      <div class="card"><div class="ch"><h3>Rentabilidad por producto</h3></div><div class="tbl-wrap"><table id="tProd"></table></div></div>
+    </div>
+  </section>
+
+  <section id="v-datos" class="view">
+    <div class="grid g3">
+      <div class="card"><div class="ch"><h3>Registrar venta</h3></div>
+        <form id="form" class="form">
+          <label>Fecha<input type="date" name="fecha" required></label>
+          <label>Categoría<select id="fmCat"></select></label>
+          <label>Producto<select name="producto" id="fmProd"></select></label>
+          <label>Región<select name="region" id="fmReg"></select></label>
+          <label>Segmento de edad<select name="segmento" id="fmSeg"></select></label>
+          <div class="two"><label>Unidades<input type="number" name="unidades" min="1" value="1" required></label><label>Descuento %<input type="number" name="descuento" min="0" max="90" value="0"></label></div>
+          <div class="two"><label>Precio unit. (COP)<input type="number" name="precio" min="1" required></label><label>Costo unit. (COP)<input type="number" name="costo" min="0" required></label></div>
+          <button class="primary" type="submit">Guardar venta</button><div id="msg" class="msg"></div>
+        </form>
+        <div class="row-actions"><a class="btn" href="/api/export.csv">⬇ Exportar CSV</a><button class="btn danger" id="reset">Regenerar demo</button></div>
+      </div>
+      <div class="card span2"><div class="ch"><h3>Últimos registros</h3><span class="tag" id="cnt"></span></div><div class="tbl-wrap tall"><table id="tRec"></table></div></div>
+    </div>
+  </section>
+</main>
+<script src="vendor/chart.umd.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

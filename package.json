@@ -1,0 +1,9 @@
+{
+  "name": "dashboard-ia-empresarial",
+  "version": "1.0.0",
+  "description": "Dashboard inteligente: registro por consola, análisis con IA y visualización interactiva",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "cli": "node cli.js", "seed": "node -e \"require('./lib/store').reset();console.log('Datos demo generados')\"" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "express": "^4.19.2" }
+}
